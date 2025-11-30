@@ -29,24 +29,20 @@
     "test:e2e": "dotenv -e .env.test -- jest --watch --no-catch --config ./test/jest-e2e.json"
   },
   "dependencies": {
-<<<<<<< HEAD
     "@langchain/community": "^1.0.0",
     "@langchain/core": "^1.0.1",
     "@langchain/openai": "^1.0.0",
     "@nestjs/common": "^11.1.1",
-=======
-    "@nestjs/common": "^11.1.6",
->>>>>>> 5b08b6571daf9f2376c8db0d152f1c3c672f4f25
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
     "@nestjs/jwt": "^11.0.0",
     "@nestjs/passport": "^11.0.5",
-    "@nestjs/platform-express": "^11.1.6",
-    "@nestjs/platform-socket.io": "^11.1.6",
-    "@nestjs/schedule": "^4.0.0",
+    "@nestjs/platform-express": "^11.1.1",
+    "@nestjs/platform-socket.io": "^11.1.1",
+    "@nestjs/schedule": "^5.0.0",
     "@nestjs/swagger": "^11.2.0",
     "@nestjs/throttler": "^6.4.0",
-    "@nestjs/websockets": "^11.1.6",
+    "@nestjs/websockets": "^11.1.1",
     "@prisma/client": "^6.15.0",
     "ansis": "^4.2.0",
     "argon2": "^0.43.0",

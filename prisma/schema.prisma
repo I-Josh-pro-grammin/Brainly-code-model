@@ -314,7 +314,12 @@ enum Level {
   ADVANCED
 }
 
-<<<<<<< HEAD
+enum Status {
+  WRIGHT
+  WRONG
+  JUST
+}
+
 // Vector storage for RAG system
 model KnowledgeBase {
   id          Int      @id @default(autoincrement())
@@ -354,10 +359,5 @@ model FineTuningJob {
   updatedAt   DateTime @updatedAt
 
   @@map("fine_tuning_jobs")
-=======
-enum Status {
-  WRIGHT
-  WRONG
-  JUST
->>>>>>> 5b08b6571daf9f2376c8db0d152f1c3c672f4f25
 }
+

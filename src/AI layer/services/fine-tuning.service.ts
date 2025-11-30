@@ -14,13 +14,13 @@ export class FineTuningService {
     if (!process.env.DEEPSEEK_API_KEY) {
       throw new Error('OpenRouter API key is not set in environment variables. Please set DEEPSEEK_API_KEY (or OPENROUTER_API_KEY) in your .env file.');
     }
-    
+
     // Check if API key is empty or just whitespace
     if (!process.env.DEEPSEEK_API_KEY.trim()) {
       throw new Error('OpenRouter API key is empty. Please provide a valid DEEPSEEK_API_KEY (or OPENROUTER_API_KEY) in your .env file.');
     }
-    
-    this.openai = new OpenAI({ 
+
+    this.openai = new OpenAI({
       apiKey: process.env.DEEPSEEK_API_KEY.trim(),
       baseURL: 'https://openrouter.ai/api/v1'
     });
@@ -82,29 +82,29 @@ export class FineTuningService {
     try {
       // Convert to JSONL format
       const jsonlData = data.map(item => JSON.stringify(item)).join('\n');
-      
+
       // Create a temporary file (in production, you'd want to use a proper file storage)
       const fs = require('fs');
       const path = require('path');
       const tempFile = path.join(process.cwd(), 'temp', `training_${Date.now()}.jsonl`);
-      
+
       // Ensure temp directory exists
       const tempDir = path.dirname(tempFile);
       if (!fs.existsSync(tempDir)) {
         fs.mkdirSync(tempDir, { recursive: true });
       }
-      
+
       fs.writeFileSync(tempFile, jsonlData);
-      
+
       // Upload to OpenAI
       const file = await this.openai.files.create({
         file: fs.createReadStream(tempFile),
         purpose: 'fine-tune',
       });
-      
+
       // Clean up temp file
       fs.unlinkSync(tempFile);
-      
+
       return file.id;
     } catch (error) {
       console.error('Error uploading training data:', error);
@@ -127,10 +127,10 @@ export class FineTuningService {
 
       // Get status from OpenAI
       const openaiJob = await this.openai.fineTuning.jobs.retrieve(job.modelId);
-      
+
       // Update local job status
       const status = openaiJob.status;
-      const jobResults = JSON.parse(JSON.stringify({
+      const jobResults = {
         status,
         fineTunedModel: openaiJob.fine_tuned_model,
         trainingFile: openaiJob.training_file,
@@ -138,13 +138,13 @@ export class FineTuningService {
         createdAt: openaiJob.created_at,
         finishedAt: openaiJob.finished_at,
         hyperparameters: openaiJob.hyperparameters,
-      })) as Prisma.InputJsonValue;
+      };
 
       await this.prisma.fineTuningJob.update({
         where: { id: jobId },
         data: {
           status,
-          results: jobResults,
+          results: jobResults as any,
         },
       });
 
@@ -214,7 +214,7 @@ export class FineTuningService {
   async createPlatformFineTuningJob(name: string = 'BrainlyCode Platform Model') {
     try {
       const trainingData = await this.generateTrainingDataFromPlatform();
-      
+
       if (trainingData.length === 0) {
         throw new Error('No training data available from platform interactions');
       }
